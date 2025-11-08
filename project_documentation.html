@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhagavad Gita Backend - Technical Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.7;
+            color: #e4e4e7;
+            background: #0a0a0a;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #18181b;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            background: linear-gradient(180deg, #18181b 0%, #27272a 100%);
+            border-bottom: 1px solid #3f3f46;
+            color: #fafafa;
+            padding: 50px 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #fafafa;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #a1a1aa;
+            font-weight: 400;
+        }
+
+        .header .version {
+            font-size: 0.9rem;
+            margin-top: 15px;
+            color: #71717a;
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            padding: 4px 12px;
+            background: #27272a;
+            border-radius: 4px;
+            border: 1px solid #3f3f46;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #27272a;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            color: #fafafa;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            padding: 12px 0;
+            border-bottom: 2px solid #27272a;
+        }
+
+        .section-title::before {
+            content: '▼';
+            margin-right: 15px;
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+            color: #71717a;
+        }
+
+        .section-title.collapsed::before {
+            transform: rotate(-90deg);
+        }
+
+        .section-title:hover {
+            color: #ffffff;
+        }
+
+        .section-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-top: 20px;
+        }
+
+        .section-content.hidden {
+            max-height: 0;
+            padding-top: 0;
+        }
+
+        h3 {
+            color: #d4d4d8;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: #a1a1aa;
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            color: #a1a1aa;
+            line-height: 1.7;
+        }
+
+        li strong {
+            color: #e4e4e7;
+        }
+
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #27272a;
+            border-left: 3px solid #52525b;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            color: #d4d4d8;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background: #3f3f46;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #fafafa;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #27272a;
+            color: #e4e4e7;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #3f3f46;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        /* Architecture Diagram Styles */
+        .arch-diagram {
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 1px solid #27272a;
+        }
+
+        .arch-layer {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .arch-layer:last-child {
+            margin-bottom: 0;
+        }
+
+        .arch-layer-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #71717a;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .arch-boxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .arch-boxes.single-box {
+            justify-content: center;
+        }
+
+        .arch-box {
+            background: #18181b;
+            border: 2px solid #3f3f46;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .arch-box:only-child {
+            max-width: 500px;
+        }
+
+        .arch-box:hover {
+            border-color: #52525b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .arch-box.api-layer {
+            border-color: #3b82f6;
+            border-width: 3px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #18181b 100%);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .arch-box.service-layer {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #1e3d3a 0%, #18181b 100%);
+        }
+
+        .arch-box.data-layer {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #3d2e1e 0%, #18181b 100%);
+        }
+
+        .arch-box.external {
+            border-color: #8b5cf6;
+            border-width: 3px;
+            background: linear-gradient(135deg, #2e1e3d 0%, #18181b 100%);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .arch-box-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.02em;
+        }
+
+        .arch-box.api-layer .arch-box-title {
+            font-size: 1.5rem;
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 8px 0;
+            border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .arch-box.external .arch-box-title {
+            font-size: 1.5rem;
+            color: #a78bfa;
+            text-shadow: 0 0 10px rgba(167, 139, 250, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 8px 0;
+            border-bottom: 2px solid rgba(167, 139, 250, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .arch-box-desc {
+            font-size: 0.85rem;
+            color: #a1a1aa;
+            line-height: 1.5;
+        }
+
+        .arch-arrow {
+            width: 6px;
+            height: 50px;
+            background: linear-gradient(180deg, #52525b 0%, #3f3f46 100%);
+            margin: 20px auto;
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .arch-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 14px solid #3f3f46;
+        }
+
+        /* Data Flow Diagram Styles */
+        .flow-diagram {
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 1px solid #27272a;
+        }
+
+        .flow-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 30px 0;
+        }
+
+        .flow-box {
+            background: #18181b;
+            border: 2px solid #3f3f46;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .flow-box:hover {
+            border-color: #52525b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .flow-box.step-1 { border-color: #3b82f6; }
+        .flow-box.step-2 { border-color: #10b981; }
+        .flow-box.step-3 { border-color: #f59e0b; }
+        .flow-box.step-4 { border-color: #ef4444; }
+        .flow-box.step-5 { border-color: #8b5cf6; }
+        .flow-box.external { 
+            border-color: #ec4899;
+            background: linear-gradient(135deg, #3d1e2e 0%, #18181b 100%);
+        }
+
+        .flow-box.conditional {
+            border-color: #f59e0b;
+            border-style: dashed;
+            background: linear-gradient(135deg, #3d2e1e 0%, #18181b 100%);
+        }
+
+        .flow-box.decision {
+            border-color: #8b5cf6;
+            border-width: 3px;
+            background: linear-gradient(135deg, #2e1e3d 0%, #18181b 100%);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .flow-box.decision .flow-box-title {
+            text-align: center;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .flow-box.decision .flow-box-content {
+            display: none;
+        }
+
+        .flow-branch {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin: 20px 0;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .flow-branch-path {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .flow-branch-label {
+            font-size: 0.85rem;
+            color: #a1a1aa;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .flow-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: #27272a;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-right: 10px;
+            color: currentColor;
+        }
+
+        .flow-box-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fafafa;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .flow-box-content {
+            font-size: 0.9rem;
+            color: #a1a1aa;
+            line-height: 1.6;
+        }
+
+        .flow-box-content strong {
+            color: #d4d4d8;
+            display: block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+
+        .flow-connector {
+            text-align: center;
+            color: #52525b;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .flow-simple-path {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 40px 0;
+            padding: 30px;
+            background: #0a0a0a;
+            border-radius: 10px;
+            border: 1px solid #27272a;
+        }
+
+        .flow-simple-item {
+            background: #18181b;
+            border: 2px solid #3f3f46;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            color: #e4e4e7;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .flow-simple-item:hover {
+            border-color: #52525b;
+            background: #1f1f23;
+        }
+
+        .flow-simple-item.external {
+            border-color: #ec4899;
+            background: linear-gradient(135deg, #3d1e2e 0%, #18181b 100%);
+        }
+
+        .flow-arrow {
+            color: #3b82f6;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .flow-vertical-arrow {
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+            margin: 10px auto;
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .flow-vertical-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 14px solid #2563eb;
+            filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.5));
+        }
+
+        .json-structure {
+            background: #0a0a0a;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid #27272a;
+            line-height: 1.6;
+        }
+
+        .json-key {
+            color: #9cdcfe;
+        }
+
+        .json-string {
+            color: #ce9178;
+        }
+
+        .json-number {
+            color: #b5cea8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            border: 1px solid #27272a;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border: 1px solid #27272a;
+        }
+
+        th {
+            background: #27272a;
+            color: #fafafa;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #a1a1aa;
+            background: #18181b;
+        }
+
+        td strong {
+            color: #e4e4e7;
+        }
+
+        tr:hover td {
+            background: #1f1f23;
+        }
+
+        .footer {
+            background: #0a0a0a;
+            border-top: 1px solid #27272a;
+            padding: 30px;
+            text-align: center;
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        .footer p {
+            color: #71717a;
+            margin-bottom: 8px;
+        }
+
+        .footer strong {
+            color: #a1a1aa;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+
+            .header {
+                padding: 35px 25px;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .flow-vertical {
+                width: 100%;
+            }
+
+            .flow-box {
+                max-width: 100%;
+            }
+
+            .flow-simple-path {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .flow-branch {
+                flex-direction: column;
+            }
+
+            .flow-branch-path {
+                min-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .flow-box.decision {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* Codebase Structure Diagram Styles */
+        .codebase-diagram {
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #27272a;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .codebase-tree {
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #d4d4d8;
+            line-height: 1.6;
+        }
+
+        .codebase-folder {
+            color: #10b981;
+            font-weight: 600;
+            margin-left: 0;
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            margin-bottom: 2px;
+            padding: 4px 0;
+            position: relative;
+        }
+
+        .codebase-file {
+            color: #a1a1aa;
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 3px 0;
+            transition: all 0.2s ease;
+            padding-left: 20px;
+        }
+
+        .codebase-file::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: #3f3f46;
+        }
+
+        .codebase-file::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 16px;
+            height: 1px;
+            background: #3f3f46;
+        }
+
+        .codebase-file:last-child::before {
+            bottom: 50%;
+        }
+
+        .codebase-file:hover {
+            background: rgba(63, 63, 70, 0.2);
+            padding-left: 22px;
+            border-radius: 4px;
+        }
+
+        .codebase-file:hover::before {
+            background: #52525b;
+        }
+
+        .codebase-file:hover::after {
+            background: #52525b;
+        }
+
+        .codebase-file-name {
+            color: #3b82f6;
+            font-weight: 500;
+            min-width: 160px;
+            font-size: 0.85rem;
+        }
+
+        .codebase-file-desc {
+            color: #a1a1aa;
+            font-size: 0.75rem;
+            margin-left: 12px;
+            font-style: normal;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            opacity: 0.8;
+        }
+
+        .codebase-file:hover .codebase-file-desc {
+            opacity: 1;
+            color: #d4d4d8;
+        }
+
+        .codebase-file:hover .codebase-file-name {
+            color: #60a5fa;
+        }
+
+        .codebase-indent-1 {
+            margin-left: 20px;
+        }
+
+        .codebase-indent-2 {
+            margin-left: 40px;
+        }
+
+        .codebase-indent-3 {
+            margin-left: 60px;
+        }
+
+        .codebase-tree-icon {
+            display: inline-block;
+            width: 14px;
+            margin-right: 6px;
+            font-size: 0.9rem;
+        }
+
+        .codebase-folder-indent-1 {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .codebase-folder-indent-1::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: #3f3f46;
+        }
+
+        .codebase-folder-indent-2 {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .codebase-folder-indent-2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: #3f3f46;
+        }
+
+        .codebase-folder-indent-1::after,
+        .codebase-folder-indent-2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 16px;
+            height: 1px;
+            background: #3f3f46;
+        }
+
+        strong {
+            color: #e4e4e7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bhagavad Gita Backend</h1>
+            <p>AI-Powered Chatbot for Chinna Jeeyar Swamy's Bhagavad Gita Teachings</p>
+            <span class="version">Technical Documentation v1.0.0</span>
+        </div>
+
+        <div class="content">
+            <!-- Project Overview -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Project Overview</h2>
+                <div class="section-content">
+                    <p>
+                        A sophisticated <span class="highlight">RAG (Retrieval-Augmented Generation)</span> system that provides 
+                        intelligent, context-aware responses to questions about the Bhagavad Gita based on 
+                        <strong>Chinna Jeeyar Swamiji's teachings</strong> and <strong>Bhagavad Ramanujacharya's Githa Bhashyam commentary</strong>.
+                    </p>
+                    
+                    <h3>Key Features:</h3>
+                    <ul>
+                        <li><strong>Semantic Search:</strong> Vector-based similarity search using Gemini embeddings (3072 dimensions)</li>
+                        <li><strong>Conversation Memory:</strong> Session-based context retention for multi-turn conversations</li>
+                        <li><strong>Streaming Responses:</strong> Real-time SSE (Server-Sent Events) streaming for better UX</li>
+                        <li><strong>Hierarchical Chunking:</strong> Parent-child document structure for better context retrieval</li>
+                        <li><strong>Smart Relevance Checking:</strong> AI-powered filtering of off-topic queries</li>
+                        <li><strong>Source Citation:</strong> Automatic chapter, episode, verse, and YouTube link citations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Architecture Overview -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">System Architecture</h2>
+                <div class="section-content">
+                    <p>The system follows a <span class="highlight">layered architecture</span> with clear separation of concerns:</p>
+                    
+                    <div class="arch-diagram">
+                        <div class="arch-layer">
+                            <div class="arch-layer-title">API Layer</div>
+                            <div class="arch-boxes single-box">
+                                <div class="arch-box api-layer">
+                                    <div class="arch-box-title">FastAPI Routes</div>
+                                    <div class="arch-box-desc">/chat/stream endpoint with request validation</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="arch-arrow"></div>
+
+                        <div class="arch-layer">
+                            <div class="arch-layer-title">Service Layer</div>
+                            <div class="arch-boxes">
+                                <div class="arch-box service-layer">
+                                    <div class="arch-box-title">Embedding Service</div>
+                                    <div class="arch-box-desc">Text to vector conversion</div>
+                                </div>
+                                <div class="arch-box service-layer">
+                                    <div class="arch-box-title">Vector Service</div>
+                                    <div class="arch-box-desc">Database operations & chunk merging</div>
+                                </div>
+                                <div class="arch-box service-layer">
+                                    <div class="arch-box-title">Generation Service</div>
+                                    <div class="arch-box-desc">LLM response generation</div>
+                                </div>
+                                <div class="arch-box service-layer">
+                                    <div class="arch-box-title">Memory Service</div>
+                                    <div class="arch-box-desc">Conversation history management</div>
+                                </div>
+                </div>
+            </div>
+
+                        <div class="arch-arrow"></div>
+
+                        <div class="arch-layer">
+                            <div class="arch-layer-title">Data Layer</div>
+                            <div class="arch-boxes">
+                                <div class="arch-box data-layer">
+                                    <div class="arch-box-title">Pinecone</div>
+                                    <div class="arch-box-desc">Vector database (3072-dim, cosine similarity)</div>
+                                </div>
+                                <div class="arch-box data-layer">
+                                    <div class="arch-box-title">In-Memory</div>
+                                    <div class="arch-box-desc">Session-based conversation storage</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="arch-arrow"></div>
+
+                        <div class="arch-layer">
+                            <div class="arch-layer-title">External APIs</div>
+                            <div class="arch-boxes single-box">
+                                <div class="arch-box external">
+                                    <div class="arch-box-title">Google Gemini</div>
+                                    <div class="arch-box-desc">Embedding API + Generation API</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Flow Diagram -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Data Flow</h2>
+                <div class="section-content">
+                    <p>Simplified flow showing how requests move through the system:</p>
+                    
+                    <div class="flow-diagram">
+                        <div class="flow-simple-path">
+                            <div class="flow-simple-item">Client Request</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item">Validate Query</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item">Get Session</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item">Check Relevance</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item external">Generate Embedding</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item external">Search Vectors</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item">Merge Chunks</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item external">Generate Response</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item">Save Memory</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-simple-item">Return Response</div>
+                        </div>
+
+                        <div class="flow-vertical">
+                            <div class="flow-box step-1">
+                                <div class="flow-box-title">
+                                    <span class="flow-number">1</span>
+                                    Client Request
+                                </div>
+                                <div class="flow-box-content">
+                                    HTTP POST /api/v1/chat
+                                    <strong>Input:</strong> Query, session_id
+                                    <strong>Output:</strong> Validated request
+                                </div>
+                        </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box step-2">
+                                <div class="flow-box-title">
+                                    <span class="flow-number">2</span>
+                                    Validate & Sanitize
+                                </div>
+                                <div class="flow-box-content">
+                                    Check format, length, content
+                                    <strong>Reason:</strong> Security & validation
+                                </div>
+                        </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box decision">
+                                <div class="flow-box-title">Valid?</div>
+                            </div>
+
+                            <div class="flow-branch">
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF NOT</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box conditional">
+                                        <div class="flow-box-title">
+                                            Return Error
+                                        </div>
+                                        <div class="flow-box-content">
+                                            HTTP 400 Bad Request
+                                            <strong>Output:</strong> Error message to client
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF YES</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box step-3">
+                                        <div class="flow-box-title">
+                                            <span class="flow-number">3</span>
+                                            Session Management
+                                        </div>
+                                        <div class="flow-box-content">
+                                            Get/create session, retrieve history
+                                            <strong>Reason:</strong> Maintain context
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box decision">
+                                <div class="flow-box-title">Greeting?</div>
+                            </div>
+
+                            <div class="flow-branch">
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF YES</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box conditional">
+                                        <div class="flow-box-title">
+                                            Return Greeting
+                                        </div>
+                                        <div class="flow-box-content">
+                                            Fast path response
+                                            <strong>Output:</strong> Greeting message to client
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF NOT</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box step-4">
+                                        <div class="flow-box-title">
+                                            <span class="flow-number">4</span>
+                                            Relevance Check
+                                        </div>
+                                        <div class="flow-box-content">
+                                            Verify query is on-topic
+                                            <strong>Reason:</strong> Filter off-topic queries
+                                        </div>
+                                    </div>
+                </div>
+            </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box decision">
+                                <div class="flow-box-title">Relevant?</div>
+                            </div>
+
+                            <div class="flow-branch">
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF NOT</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box conditional">
+                                        <div class="flow-box-title">
+                                            Return Off-Topic
+                                        </div>
+                                        <div class="flow-box-content">
+                                            Polite redirect message
+                                            <strong>Output:</strong> Off-topic response to client
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF YES</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box external">
+                                        <div class="flow-box-title">
+                                            <span class="flow-number">5</span>
+                                            Generate Embedding
+                                        </div>
+                                        <div class="flow-box-content">
+                                            Gemini API → 3072-dim vector
+                                            <strong>External:</strong> Google Gemini Embedding API
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box external">
+                                <div class="flow-box-title">
+                                    <span class="flow-number">6</span>
+                                    Vector Search
+                                </div>
+                                <div class="flow-box-content">
+                                    Pinecone similarity search (top-8)
+                                    <strong>External:</strong> Pinecone Database
+                                </div>
+                            </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box decision">
+                                <div class="flow-box-title">Results?</div>
+                            </div>
+
+                            <div class="flow-branch">
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF NONE</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box conditional">
+                                        <div class="flow-box-title">
+                                            Return No Context
+                                        </div>
+                                        <div class="flow-box-content">
+                                            No relevant documents found
+                                            <strong>Output:</strong> No context response to client
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flow-branch-path">
+                                    <div class="flow-branch-label">IF FOUND</div>
+                                    <div class="flow-vertical-arrow" style="height: 20px;"></div>
+                                    <div class="flow-box step-3">
+                                        <div class="flow-box-title">
+                                            <span class="flow-number">7</span>
+                                            Merge Chunks
+                                        </div>
+                                        <div class="flow-box-content">
+                                            Group related chunks by parent
+                                            <strong>Reason:</strong> Complete context
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box external">
+                                <div class="flow-box-title">
+                                    <span class="flow-number">8</span>
+                                    Generate Response
+                                </div>
+                                <div class="flow-box-content">
+                                    Gemini API → Natural language
+                                    <strong>External:</strong> Google Gemini Generation API
+                                </div>
+                            </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box step-2">
+                                <div class="flow-box-title">
+                                    <span class="flow-number">9</span>
+                                    Save Memory
+                                </div>
+                                <div class="flow-box-content">
+                                    Store conversation turn
+                                    <strong>Reason:</strong> Future context
+                                </div>
+                            </div>
+
+                            <div class="flow-vertical-arrow"></div>
+
+                            <div class="flow-box step-1">
+                                <div class="flow-box-title">
+                                    <span class="flow-number">10</span>
+                                    Return Response
+                                </div>
+                                <div class="flow-box-content">
+                                    JSON or SSE stream to client
+                                    <strong>Output:</strong> Answer + sources
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Codebase Structure -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Codebase Structure</h2>
+                <div class="section-content">
+                    <p>Visual representation of the project structure with file descriptions:</p>
+                    
+                    <div class="codebase-diagram">
+                        <div class="codebase-tree">
+                            <div class="codebase-folder">
+                                <span class="codebase-tree-icon">📁</span>
+                                <strong>Bhagavad-Gita-Backend/</strong>
+                            </div>
+                        
+                            <div class="codebase-file codebase-indent-1">
+                                <span>📄</span>
+                                <span class="codebase-file-name">requirements.txt</span>
+                                <span class="codebase-file-desc">Python dependencies list</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-1">
+                                <span>📄</span>
+                                <span class="codebase-file-name">env.example.txt</span>
+                                <span class="codebase-file-desc">Environment variables template</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-1">
+                                <span>📄</span>
+                                <span class="codebase-file-name">project_documentation.html</span>
+                                <span class="codebase-file-desc">Technical documentation</span>
+                            </div>
+
+                            <div class="codebase-folder codebase-folder-indent-1">
+                                <span class="codebase-tree-icon">📁</span>
+                                <strong>app/</strong>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-2">
+                                <span>🐍</span>
+                                <span class="codebase-file-name">main.py</span>
+                                <span class="codebase-file-desc">FastAPI app entry point & middleware</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-2">
+                                <span>⚙️</span>
+                                <span class="codebase-file-name">config.py</span>
+                                <span class="codebase-file-desc">Settings & environment config</span>
+                            </div>
+
+                            <div class="codebase-folder codebase-folder-indent-2">
+                                <span class="codebase-tree-icon">📁</span>
+                                <strong>api/</strong>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>📋</span>
+                                <span class="codebase-file-name">models.py</span>
+                                <span class="codebase-file-desc">Pydantic request/response models</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>🛣️</span>
+                                <span class="codebase-file-name">routes.py</span>
+                                <span class="codebase-file-desc">API endpoints & request handling</span>
+                            </div>
+
+                            <div class="codebase-folder codebase-folder-indent-2">
+                                <span class="codebase-tree-icon">📁</span>
+                                <strong>services/</strong>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>🔑</span>
+                                <span class="codebase-file-name">api_key_manager.py</span>
+                                <span class="codebase-file-desc">API key rotation & quota management</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>💾</span>
+                                <span class="codebase-file-name">conversation_memory_service.py</span>
+                                <span class="codebase-file-desc">Session-based conversation history</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>🔢</span>
+                                <span class="codebase-file-name">embedding_service.py</span>
+                                <span class="codebase-file-desc">Text to vector conversion (Gemini)</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>🤖</span>
+                                <span class="codebase-file-name">generation_service.py</span>
+                                <span class="codebase-file-desc">LLM response generation & streaming</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>🔍</span>
+                                <span class="codebase-file-name">vector_service.py</span>
+                                <span class="codebase-file-desc">Pinecone DB operations & chunk merging</span>
+                            </div>
+
+                            <div class="codebase-folder codebase-folder-indent-2">
+                                <span class="codebase-tree-icon">📁</span>
+                                <strong>utils/</strong>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>📊</span>
+                                <span class="codebase-file-name">metadata_utils.py</span>
+                                <span class="codebase-file-desc">Metadata processing utilities</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>📝</span>
+                                <span class="codebase-file-name">prompts.py</span>
+                                <span class="codebase-file-desc">System prompts & templates</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-3">
+                                <span>✅</span>
+                                <span class="codebase-file-name">validators.py</span>
+                                <span class="codebase-file-desc">Input validation & sanitization</span>
+                            </div>
+
+                            <div class="codebase-folder codebase-folder-indent-1">
+                                <span class="codebase-tree-icon">📁</span>
+                                <strong>data/</strong>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-2">
+                                <span>📚</span>
+                                <span class="codebase-file-name">final_ch1.json</span>
+                                <span class="codebase-file-desc">Chapter 1 episode data</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-2">
+                                <span>📚</span>
+                                <span class="codebase-file-name">final_ch2.json</span>
+                                <span class="codebase-file-desc">Chapter 2 episode data</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-2">
+                                <span>📚</span>
+                                <span class="codebase-file-name">final_ch3.json</span>
+                                <span class="codebase-file-desc">Chapter 3 episode data</span>
+                            </div>
+
+                            <div class="codebase-folder codebase-folder-indent-1">
+                                <span class="codebase-tree-icon">📁</span>
+                                <strong>scripts/</strong>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-2">
+                                <span>🔧</span>
+                                <span class="codebase-file-name">setup_pinecone.py</span>
+                                <span class="codebase-file-desc">Pinecone index setup script</span>
+                            </div>
+
+                            <div class="codebase-file codebase-indent-2">
+                                <span>🧪</span>
+                                <span class="codebase-file-name">test_pipeline.py</span>
+                                <span class="codebase-file-desc">End-to-end pipeline testing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem Statement -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Problem Statement</h2>
+                <div class="section-content">
+                    <p><strong>Challenge:</strong> Bhagavad Gita teachings from Chinna Jeeyar Swamiji are spread across 
+                    multiple episodes (video format) covering different chapters and verses, making it difficult for seekers to:</p>
+                    
+                    <ul>
+                        <li>Find specific teachings quickly without watching hours of content</li>
+                        <li>Get contextual understanding across multiple related episodes</li>
+                        <li>Ask follow-up questions with conversation context</li>
+                        <li>Access teachings in a structured, searchable format</li>
+                    </ul>
+
+                    <p><strong>Solution:</strong> Build an AI-powered chatbot that:</p>
+                    <ul>
+                        <li>Indexes all episode content with semantic embeddings</li>
+                        <li>Retrieves relevant context using vector similarity search</li>
+                        <li>Generates natural, well-cited responses using LLM</li>
+                        <li>Maintains conversation context for follow-up questions</li>
+                        <li>Provides source references with direct YouTube links</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Design Patterns Used -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Design Patterns Used</h2>
+                <div class="section-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pattern</th>
+                                <th>Implementation</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Singleton</strong></td>
+                                <td>Service instances (VectorService, EmbeddingService)</td>
+                                <td>Ensure single instance, reduce overhead</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Factory</strong></td>
+                                <td>LLM instance creation (streaming vs non-streaming)</td>
+                                <td>Create appropriate LLM based on use case</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Strategy</strong></td>
+                                <td>Response generation (streaming vs complete)</td>
+                                <td>Switch between different response strategies</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Repository</strong></td>
+                                <td>Service layer abstracts Pinecone/Gemini operations</td>
+                                <td>Decouple business logic from data access</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dependency Injection</strong></td>
+                                <td>Settings injected via Pydantic Settings</td>
+                                <td>Externalize configuration, easy testing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Models Used -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Models & APIs Used</h2>
+                <div class="section-content">
+                    <h3>1. Embedding Model:</h3>
+                    <div class="code-block">
+                        <strong>Model:</strong> models/gemini-embedding-001<br>
+                        <strong>Dimensions:</strong> 3072<br>
+                        <strong>Provider:</strong> Google Gemini API<br>
+                        <strong>Purpose:</strong> Convert text to semantic vectors for similarity search
+                    </div>
+
+                    <h3>2. Generation Model:</h3>
+                    <div class="code-block">
+                        <strong>Model:</strong> gemini-2.5-flash<br>
+                        <strong>Temperature:</strong> 0.3 (consistent formatting)<br>
+                        <strong>Max Tokens:</strong> 4096<br>
+                        <strong>Provider:</strong> Google Gemini API<br>
+                        <strong>Purpose:</strong> Generate natural language responses with markdown formatting
+                    </div>
+
+                    <h3>3. Vector Database:</h3>
+                    <div class="code-block">
+                        <strong>Database:</strong> Pinecone<br>
+                        <strong>Index:</strong> bhagavad-gita-teachings<br>
+                        <strong>Environment:</strong> AWS us-east-1 (Serverless)<br>
+                        <strong>Metric:</strong> Cosine similarity<br>
+                        <strong>Dimension:</strong> 3072
+                    </div>
+                </div>
+            </div>
+
+            <!-- JSON Structure -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">JSON Data Structure</h2>
+                <div class="section-content">
+                    <p>Each episode is stored as a JSON object with the following structure:</p>
+                    
+                    <div class="json-structure">
+<span class="json-key">{</span><br>
+&nbsp;&nbsp;<span class="json-key">"chapter_number"</span>: <span class="json-number">1</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"episode_number"</span>: <span class="json-number">1</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"episode_content"</span>: <span class="json-string">"Full episode transcript..."</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"episode_summary"</span>: <span class="json-string">"AI-generated summary..."</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"verses_covered"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-string">"1.1"</span><br>
+&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;<span class="json-key">"youtube_url"</span>: <span class="json-string">"https://www.youtube.com/watch?v=..."</span><br>
+<span class="json-key">}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Tech Stack & Dependencies</h2>
+                <div class="section-content">
+                    <h3>Core Framework:</h3>
+                    <div class="tech-stack">
+                        <span class="badge">FastAPI 0.120.4</span>
+                        <span class="badge">Uvicorn 0.38.0</span>
+                        <span class="badge">Python 3.x</span>
+                    </div>
+
+                    <h3>AI/ML Libraries:</h3>
+                    <div class="tech-stack">
+                        <span class="badge">LangChain 0.3.27</span>
+                        <span class="badge">LangChain-Google-GenAI 2.0.10</span>
+                        <span class="badge">LangChain-Pinecone 0.2.12</span>
+                        <span class="badge">Google-GenerativeAI 0.8.5</span>
+                    </div>
+
+                    <h3>Vector Database:</h3>
+                    <div class="tech-stack">
+                        <span class="badge">Pinecone-Client 6.0.0</span>
+                    </div>
+
+                    <h3>Data Validation:</h3>
+                    <div class="tech-stack">
+                        <span class="badge">Pydantic 2.12.3</span>
+                        <span class="badge">Pydantic-Settings 2.11.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Features -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">Key Features & Optimizations</h2>
+                <div class="section-content">
+                    <h3>1. Hierarchical Chunking with Parent-Child Merging:</h3>
+                    <ul>
+                        <li>Episodes split into parent (full) and child (chunks) documents</li>
+                        <li>During retrieval, related chunks from same parent are automatically merged</li>
+                        <li>Provides granular search with full context</li>
+                    </ul>
+
+                    <h3>2. API Key Rotation & Rate Limit Handling:</h3>
+                    <ul>
+                        <li>Supports up to 3 Google API keys</li>
+                        <li>Automatic rotation on rate limits (429 errors)</li>
+                        <li>Exponential backoff retry logic</li>
+                        <li>Daily quota tracking per key</li>
+                    </ul>
+
+                    <h3>3. Conversation Context Enhancement:</h3>
+                    <ul>
+                        <li>Detects vague queries with pronouns ("it", "this", "that")</li>
+                        <li>Enhances search query with previous conversation context</li>
+                        <li>Enables natural follow-up questions</li>
+                    </ul>
+
+                    <h3>4. Smart Relevance Filtering:</h3>
+                    <ul>
+                        <li>AI-powered relevance check using Gemini</li>
+                        <li>Filters out off-topic questions gracefully</li>
+                        <li>Context-aware (considers conversation history)</li>
+                    </ul>
+
+                    <h3>5. Streaming Response with SSE:</h3>
+                    <ul>
+                        <li>Server-Sent Events for real-time streaming</li>
+                        <li>Chunks streamed as generated (no buffering)</li>
+                        <li>Better UX with immediate feedback</li>
+                    </ul>
+
+                    <h3>6. Automatic Source Citation:</h3>
+                    <ul>
+                        <li>Citations woven naturally into responses</li>
+                        <li>Dedicated sources section at end</li>
+                        <li>YouTube links for primary sources</li>
+                        <li>Chapter, episode, verse references</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- API Endpoints -->
+            <div class="section">
+                <h2 class="section-title" onclick="toggleSection(this)">API Endpoints</h2>
+                <div class="section-content">
+                    <p>Complete list of all available API endpoints and their purposes:</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Method</th>
+                                <th>Description</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>/</strong></td>
+                                <td>GET</td>
+                                <td>Root endpoint</td>
+                                <td>API information and version details</td>
+                            </tr>
+                            <tr>
+                                <td><strong>/api/v1/health</strong></td>
+                                <td>GET</td>
+                                <td>Health check endpoint</td>
+                                <td>Monitor service status, check Pinecone and Gemini API connectivity</td>
+                            </tr>
+                            <tr>
+                                <td><strong>/api/v1/stats</strong></td>
+                                <td>GET</td>
+                                <td>Index statistics</td>
+                                <td>Get Pinecone vector database statistics (total vectors, dimensions, namespaces)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>/api/v1/chat</strong></td>
+                                <td>POST</td>
+                                <td>Non-streaming chat</td>
+                                <td>Get complete response in single JSON response (for testing or simple integrations)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>/api/v1/chat/stream</strong></td>
+                                <td>POST</td>
+                                <td>Streaming chat (SSE)</td>
+                                <td><strong>Primary endpoint</strong> - Real-time streaming responses using Server-Sent Events for better UX</td>
+                            </tr>
+                            <tr>
+                                <td><strong>/chat</strong></td>
+                                <td>POST</td>
+                                <td>Root-level streaming</td>
+                                <td>Alternative streaming endpoint for frontend compatibility</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Request Body (Chat):</h3>
+                    <div class="json-structure">
+<span class="json-key">{</span><br>
+&nbsp;&nbsp;<span class="json-key">"query"</span>: <span class="json-string">"What is dharma?"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"stream"</span>: <span class="json-number">true</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"session_id"</span>: <span class="json-string">"uuid-string"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"filter_dict"</span>: <span class="json-key">{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"chapter_number"</span>: <span class="json-number">2</span><br>
+&nbsp;&nbsp;<span class="json-key">}</span><br>
+<span class="json-key">}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p><strong>Bhagavad Gita Backend v1.0.0</strong></p>
+            <p>Built using FastAPI, LangChain, Pinecone & Google Gemini</p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle section collapse/expand
+        function toggleSection(element) {
+            element.classList.toggle('collapsed');
+            const content = element.nextElementSibling;
+            content.classList.toggle('hidden');
+        }
+
+        // Initialize - expand all sections by default
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Documentation loaded successfully!');
+        });
+    </script>
+</body>
+</html>
